@@ -48,4 +48,5 @@ def test_post_v2(set_url, generate_user, headers):
 @pytest.mark.parametrize("data", data)
 def test_invalid_post_v2(data, client):
     response = client.register_user(data)
+    assert response.status_code == 200, "Статус код ответа сервера должен быть 400"
 
