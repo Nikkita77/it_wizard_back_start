@@ -1,31 +1,34 @@
 import pytest
 import requests
-import json
-from faker import Faker
+from client import Client
 
+from conftest import generate_user
 
 @pytest.fixture
-def generate_user():
-    fake = Faker("ru_RU")
-    return {
-        "login": fake.user_name(),
-        "email": fake.email(),
-        "password": fake.password()
+def client():
+    return Client()
 
+data = [
+    # Короткий логин
+    {
+        "login": "1",
+        "email": "ivan@mail.ru",
+        "password": "1314254"
+    },
+
+    # Короткий емайл
+    {
+        "login": "12134",
+        "email": "e",
+        "password": ""
+    },
+    # Короткий пароль
+    {
+        "login": "12134",
+        "email": "ivan@mail.ru",
+        "password": "d"
     }
-
-
-@pytest.fixture
-def set_url():
-    return "http://5.63.153.31:5051/v1/account"
-
-
-@pytest.fixture
-def headers():
-    return {
-        'accept': '*/*',
-        'Content-Type': 'application/json'
-    }
+]
 
 
 def test_post_v1(set_url, generate_user, headers):
@@ -37,4 +40,11 @@ def test_post_v1(set_url, generate_user, headers):
 def test_post_v2(set_url, generate_user, headers):
     print(generate_user)
     response = requests.request("POST", set_url, headers=headers, json=generate_user)
+    print(response.text)
+
+
+@pytest.mark.parametrize("data", data)
+def test_invalid_post_v2(data, client):
+    print(generate_user)
+    response = client.register_user(data)
     print(response.text)
