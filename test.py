@@ -4,9 +4,11 @@ from client import Client
 
 from conftest import generate_user
 
+
 @pytest.fixture
 def client():
     return Client()
+
 
 data = [
     # Короткий логин
@@ -45,6 +47,5 @@ def test_post_v2(set_url, generate_user, headers):
 
 @pytest.mark.parametrize("data", data)
 def test_invalid_post_v2(data, client):
-    print(generate_user)
     response = client.register_user(data)
-    print(response.text)
+
